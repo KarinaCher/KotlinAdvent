@@ -1,21 +1,34 @@
+import java.util.Comparator
+
 fun main() {
-    fun part1(input: List<String>): Int {
+    fun mapElvesCalories(input: List<String>): MutableMap<Int, Int> {
         var elvesCalories = mutableMapOf<Int, Int>()
         var index = 1
         for (line in input) {
             if (line.isEmpty()) {
                 index = index.plus(1)
                 elvesCalories.put(index.inc(), 0)
-            }
-            else {
+            } else {
                 elvesCalories[index] = elvesCalories[index]?.plus(line.toInt()) ?: 0
             }
         }
+        return elvesCalories
+    }
+
+    fun part1(input: List<String>): Int {
+        var elvesCalories = mapElvesCalories(input)
         return elvesCalories.maxOf {e -> e.value}
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        var elvesCalories = mapElvesCalories(input)
+        return elvesCalories.toList()
+            .sortedBy { it.second }
+            .reversed()
+            .stream()
+            .limit(3)
+            .mapToInt { it.second }
+            .sum()
     }
 
     // test if implementation meets criteria from the description, like:
