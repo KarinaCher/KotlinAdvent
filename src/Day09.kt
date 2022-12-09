@@ -39,9 +39,8 @@ fun main() {
     fun part1(input: List<String>): Int {
         val visited = mutableSetOf<Pair<Int, Int>>()
 
-        var headPosition = 0 to 0
-        var tailPosition = 0 to 0
-        visited.add(tailPosition)
+        var rope = arrayOf(0 to 0, 0 to 0)
+        visited.add(rope.last())
 
         for (line in input) {
             val split = line.split(" ")
@@ -49,10 +48,14 @@ fun main() {
             val steps = split[1].toInt()
 
             for (step in 1..steps) {
-                headPosition = nextPosition(direction, headPosition)
-                tailPosition = tailPosition(headPosition, tailPosition, direction)
-//                println("head $headPosition tail $tailPosition")
-                visited.add(tailPosition)
+                rope[0] = nextPosition(direction, rope.first())
+
+                for (knotNum in 1 until rope.size) {
+                    rope[knotNum] = tailPosition(rope[knotNum - 1], rope[knotNum], direction)
+                }
+                println(rope.joinToString(" "))
+
+                visited.add(rope.last())
             }
 
         }
@@ -67,8 +70,10 @@ fun main() {
     }
 
     val testInput = readInput("Day09_test")
+    val testInput2 = readInput("Day09_2_test")
     check(part1(testInput) == 13)
-    check(part2(testInput) == 0)
+    check(part1(testInput2) == 9)
+    check(part2(testInput2) == 36)
 
     val input = readInput("Day09")
     println(part1(input))
